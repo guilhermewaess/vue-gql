@@ -15,7 +15,6 @@ mongoConnect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => console.log(`DB Connected`))
   .catch(err => console.error(err))
 
-console.log({ Post, User })
 const server = new ApolloServer({
   typeDefs,
   resolvers,
