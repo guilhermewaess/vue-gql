@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <loading></loading>
     <app-toolbar></app-toolbar>
     <main>
       <v-container class="mt-4">
@@ -13,11 +14,13 @@
 
 <script>
 import AppToolbar from './components/menus/AppToolbar.vue';
+import Loading from './components/misc/Loading.vue';
 
 export default {
   name: 'App',
   components: {
     AppToolbar,
+    Loading,
   },
 };
 </script>
