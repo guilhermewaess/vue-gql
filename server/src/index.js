@@ -11,6 +11,7 @@ const typeDefsPath = join(__dirname, '../src', 'typeDefs.gql')
 const typeDefs = readFileSync(typeDefsPath, 'utf-8')
 
 dotEnvConfig({ path: 'variables.env' })
+
 mongoConnect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => console.log(`DB Connected`))
   .catch(err => console.error(err))
