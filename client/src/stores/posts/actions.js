@@ -1,21 +1,13 @@
-import { gql } from 'apollo-boost';
 import { SET_POSTS } from './mutationTypes';
 import { SET_LOADING } from '../ui/mutationTypes';
+import { GET_POSTS } from './queries';
 import apolloClient from '../../apolloClient';
 
 export async function getPosts({ commit }) {
   try {
     commit(`ui/${SET_LOADING}`, true, { root: true });
     const { data } = await apolloClient.query({
-      query: gql`
-        query {
-          getPosts {
-            _id
-            title
-            imgUrl
-          }
-        }
-      `,
+      query: GET_POSTS,
     });
 
     commit(SET_POSTS, data.getPosts);
