@@ -1,8 +1,10 @@
 type User {
-  _id: ID
+  userId: String
   userName: String!
   email: String!
-  password: String!
+  emailVerified: Boolean!
+  token: String!
+  password: String
   avatar: String
   joinDate: String
   favorites: [Post]
@@ -32,7 +34,16 @@ type Query {
   getUser: User
 }
 
+input SignInWithSocialInput {
+  email: String
+  email_verified: Boolean
+  name: String
+  picture: String
+  user_id: String
+}
+
 type Mutation {
   addPost(title: String, imgUrl: String, categories: [String], description: String, createdBy: ID!): Post!
   signUpUser(userName: String!, email: String!, password: String!): User!
+  signInWithSocial(token: String!): User!
 }

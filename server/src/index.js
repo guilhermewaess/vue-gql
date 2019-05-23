@@ -6,6 +6,7 @@ import { join } from 'path'
 
 import { Post, User } from './models'
 import { resolvers } from './resolvers'
+import './firebase'
 
 const typeDefsPath = join(__dirname, '../src', 'typeDefs.gql')
 const typeDefs = readFileSync(typeDefsPath, 'utf-8')
