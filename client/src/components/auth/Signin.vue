@@ -74,7 +74,8 @@
 
               <v-flex xs5>
                 <v-btn block
-                       color="accent">
+                       color="accent"
+                       @click="signInWithGoogle">
                   <v-icon left
                           dark>
                     fab fa-google
@@ -87,8 +88,9 @@
             <v-layout row>
               <v-flex xs12>
                 <v-btn block
+                       disabled
                        color="accent">
-                  Create a local account :)
+                  Create a local account (coming soon) :(
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -101,13 +103,18 @@
 
 <script>
 export default {
-  name: "Signin",
+  name: 'Signin',
   data() {
     return {
-      username: "",
-      password: ""
+      username: '',
+      password: '',
     };
-  }
+  },
+  methods: {
+    signInWithGoogle() {
+      this.$store.dispatch('auth/loginWithGoogle');
+    },
+  },
 };
 </script>
 
