@@ -4,6 +4,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import apolloClient from './apolloClient';
+import './firebase';
 import './plugins/vuetify';
 import './registerServiceWorker';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
