@@ -3,7 +3,6 @@ type User {
   userName: String!
   email: String!
   emailVerified: Boolean!
-  token: String!
   password: String
   avatar: String
   joinDate: String
@@ -32,6 +31,7 @@ type Message {
 type Query {
   getPosts: [Post]
   getUser: User
+  validateToken(token: String!): User!
 }
 
 input SignInWithSocialInput {
