@@ -1,19 +1,27 @@
 import { gql } from 'apollo-boost';
 
 // mutations
-const SIGIN_WITH_SOCIAL = gql`
+export const SIGIN_WITH_SOCIAL = gql`
   mutation($token: String!) {
     signInWithSocial(token: $token) {
-      userId
       userName
       email
       emailVerified
-      password
       avatar
       joinDate
-      token
     }
   }
 `;
 
-export default SIGIN_WITH_SOCIAL;
+// queries
+export const VALIDATE_TOKEN = gql`
+  query($token: String!){
+    validateToken(token: $token){
+      userName
+        email
+        emailVerified
+        avatar
+        joinDate
+    }
+  }
+`;

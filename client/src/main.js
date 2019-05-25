@@ -23,5 +23,11 @@ new Vue({
   apolloProvider,
   router,
   store,
+  created() {
+    const token = store.getters['auth/getToken'];
+    if (token) {
+      store.dispatch('auth/onAppStartLogin');
+    }
+  },
   render: h => h(App),
 }).$mount('#app');
