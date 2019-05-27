@@ -1,4 +1,3 @@
-import firebase from 'firebase-admin'
 import { UserService } from './services/user-service'
 
 export const resolvers = {
@@ -13,16 +12,8 @@ export const resolvers = {
 
       return posts
     },
-    getUser: () => null,
-    validateToken: async (_, { token }) => {
-      try {
-        const fbUser = await firebase.auth().verifyIdToken(token, true)
-        const userModel = UserService.transformFirebaseUserInUserModel(fbUser)
-        const user = await UserService.GetUser({ userId: userModel.userId })
-        return user
-      } catch (error) {
-        throw new Error('Fail on token verification')
-      }
+    getUser: (_, __, { currentUser }) => {
+      return currentUser
     }
   },
   Mutation: {
@@ -43,16 +34,8 @@ export const resolvers = {
     },
     signInWithSocial: async (_, { token }) => {
       try {
-        const fbUser = await firebase.auth().verifyIdToken(token, true)
-        const userModel = UserService.transformFirebaseUserInUserModel(fbUser)
-        const user = await UserService.GetUser({ userId: userModel.userId })
-
-        if (user) {
-          return user
-        }
-
-        const newUser = await UserService.createNewUser(userModel)
-        return newUser
+        const user = await UserService.createOrGetUserFromSocial(token)
+        return user
       } catch (error) {
         console.error(error)
         throw new Error('Failed on get user information')

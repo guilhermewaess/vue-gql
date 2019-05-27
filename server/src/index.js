@@ -4,11 +4,11 @@ import { config as dotEnvConfig } from 'dotenv'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
-import { Post, User } from './models'
 import { resolvers } from './resolvers'
+import { contextResolver as context } from './context-resolver'
 import './firebase'
 
-const typeDefsPath = join(__dirname, '../src', 'typeDefs.gql')
+const typeDefsPath = join(__dirname, '../src', 'type-defs.gql')
 const typeDefs = readFileSync(typeDefsPath, 'utf-8')
 
 dotEnvConfig({ path: 'variables.env' })
@@ -20,10 +20,7 @@ mongoConnect(process.env.MONGO_URI, { useNewUrlParser: true })
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {
-    User,
-    Post
-  }
+  context
 })
 
 server

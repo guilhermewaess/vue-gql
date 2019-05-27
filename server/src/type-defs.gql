@@ -30,8 +30,7 @@ type Message {
 
 type Query {
   getPosts: [Post]
-  getUser: User
-  validateToken(token: String!): User!
+  getUser: User!
 }
 
 input SignInWithSocialInput {
