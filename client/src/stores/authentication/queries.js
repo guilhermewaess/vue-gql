@@ -14,14 +14,14 @@ export const SIGIN_WITH_SOCIAL = gql`
 `;
 
 // queries
-export const VALIDATE_TOKEN = gql`
-  query($token: String!){
-    validateToken(token: $token){
+export const GET_USER = gql`
+  query {
+    getUser {
       userName
-        email
-        emailVerified
-        avatar
-        joinDate
+      email
+      emailVerified
+      avatar
+      joinDate
     }
   }
 `;

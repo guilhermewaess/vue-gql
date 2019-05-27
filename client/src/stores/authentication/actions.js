@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import router from '../../router';
 import apolloClient from '../../apolloClient';
-import { SIGIN_WITH_SOCIAL, VALIDATE_TOKEN } from './queries';
+import { SIGIN_WITH_SOCIAL, GET_USER } from './queries';
 import { LOGIN, UPDATE_TOKEN } from './mutationTypes';
 
 // import { LOGIN } from './mutationTypes';
@@ -20,16 +20,13 @@ export async function loginWithGoogle({ commit }) {
   commit(UPDATE_TOKEN, token);
 }
 
-export async function onAppStartLogin({ getters, commit }) {
+export async function onAppStartLogin({ commit }) {
   try {
-    const token = getters.getToken;
-    const { data: { validateToken } } = await apolloClient.query({
-      query: VALIDATE_TOKEN,
-      variables: { token },
+    const { data: { getUser } } = await apolloClient.query({
+      query: GET_USER,
     });
-    const user = validateToken;
+    const user = getUser;
     commit(LOGIN, user);
-    console.log('TCL: onAppStartLogin -> token', token);
   } catch (error) {
     commit(UPDATE_TOKEN, null);
     router.push({ name: 'signin' });
