@@ -17,17 +17,14 @@ export const resolvers = {
     }
   },
   Mutation: {
-    addPost: async (
-      _,
-      { title, imgUrl, categories, description, createdBy },
-      { Post }
-    ) => {
+    addPost: async (_, { post }, { Post, currentUser }) => {
+      console.log('Post', { post })
       const newPost = await new Post({
-        title,
-        imgUrl,
-        categories,
-        description,
-        createdBy
+        title: post.title,
+        imgUrl: post.imgUrl,
+        categories: post.categories,
+        description: post.description,
+        createdBy: currentUser._id
       }).save()
 
       return newPost
