@@ -25,7 +25,8 @@
         </v-list-tile-content>
       </v-list-tile>
 
-      <v-list-tile v-if="isLogged" @click="signOut">
+      <v-list-tile v-if="isLogged"
+                   @click="signOut">
         <v-list-tile-action>
           <v-icon>fa-sign-out-alt</v-icon>
         </v-list-tile-action>
@@ -47,18 +48,24 @@ export default {
     },
   },
   computed: {
-    isLogged() { return this.$store.getters['auth/isLogged']; },
+    isLogged() {
+      return this.$store.getters['auth/isLogged'];
+    },
     navItems() {
       if (this.isLogged) {
         return [
-          { icon: 'fa-comments', title: 'Posts', link: '/posts' },
-          { icon: 'fa-file-alt', title: 'Create Post', link: '/posts/add' },
-          { icon: 'fa-user', title: 'Profile', link: '/profile' },
+          { icon: 'fa-comments', title: 'Posts', link: { name: 'posts' } },
+          {
+            icon: 'fa-file-alt',
+            title: 'Create Post',
+            link: { name: 'addPost' },
+          },
+          { icon: 'fa-user', title: 'Profile', link: { name: 'profile' } },
         ];
       }
       return [
-        { icon: 'fa-comments', title: 'Posts', link: '/posts' },
-        { icon: 'fa-sign-in-alt', title: 'Sign In', link: '/signin' },
+        { icon: 'fa-comments', title: 'Posts', link: { name: 'posts' } },
+        { icon: 'fa-sign-in-alt', title: 'Sign In', link: { name: 'signin' } },
       ];
     },
   },

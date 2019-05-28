@@ -56,7 +56,7 @@
                @click="signOut">
           <v-icon class="hidden-sm-only"
                   left>
-                  fa-sign-out-alt
+            fa-sign-out-alt
           </v-icon>
           Signout
         </v-btn>
@@ -93,11 +93,13 @@ export default {
     },
     navItems() {
       if (this.isLogged) {
-        return [{ icon: 'fa-comments', title: 'Posts', link: '/posts' }];
+        return [
+          { icon: 'fa-comments', title: 'Posts', link: { name: 'posts' } },
+        ];
       }
       return [
-        { icon: 'fa-comments', title: 'Posts', link: '/posts' },
-        { icon: 'fa-sign-in-alt', title: 'Sign In', link: '/signin' },
+        { icon: 'fa-comments', title: 'Posts', link: { name: 'posts' } },
+        { icon: 'fa-sign-in-alt', title: 'Sign In', link: { name: 'signin' } },
       ];
     },
   },

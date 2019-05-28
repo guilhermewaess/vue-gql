@@ -1,6 +1,6 @@
 import { SET_POSTS } from './mutationTypes';
 import { SET_LOADING } from '../ui/mutationTypes';
-import { GET_POSTS } from './queries';
+import { GET_POSTS, ADD_POST } from './queries';
 import apolloClient from '../../apolloClient';
 
 export async function getPosts({ commit }) {
@@ -19,4 +19,17 @@ export async function getPosts({ commit }) {
   }
 }
 
-export function test() {}
+export async function addPost(_, post) {
+  try {
+    const { data } = await apolloClient.mutate({
+      mutation: ADD_POST,
+      variables: {
+        post,
+      },
+    });
+
+    console.log(data.addPost);
+  } catch (error) {
+    console.error(error);
+  }
+}

@@ -10,4 +10,16 @@ export const GET_POSTS = gql`
   }
 `;
 
-export const Post = '';
+export const ADD_POST = gql`
+  mutation($post: AddPostInput!) {
+    addPost(post: $post) {
+      _id
+      title
+      imgUrl
+      categories
+      description
+      createdDate
+      likes
+    }
+  }
+`;

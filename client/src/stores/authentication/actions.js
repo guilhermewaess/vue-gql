@@ -36,7 +36,7 @@ export async function signOut({ commit }) {
   try {
     await firebase.auth().signOut();
     await apolloClient.resetStore();
-    
+
     commit(SIGN_OUT);
     router.push({ name: 'home' });
   } catch (error) {

@@ -30,6 +30,7 @@ export default new Router({
       path: '/post/add',
       name: 'addPost',
       component: AddPost,
+      beforeEnter: authGuard,
     },
     {
       path: '/profile',
