@@ -2,9 +2,7 @@ import firebase from 'firebase/app';
 import router from '../../router';
 import apolloClient from '../../apolloClient';
 import { SIGIN_WITH_SOCIAL, GET_USER } from './queries';
-import { LOGIN, UPDATE_TOKEN } from './mutationTypes';
-
-// import { LOGIN } from './mutationTypes';
+import { LOGIN, UPDATE_TOKEN, SIGN_OUT } from './mutationTypes';
 
 export async function loginWithGoogle({ commit }) {
   const googleProvider = new firebase.auth.GoogleAuthProvider();
@@ -18,6 +16,7 @@ export async function loginWithGoogle({ commit }) {
 
   commit(LOGIN, signInWithSocial);
   commit(UPDATE_TOKEN, token);
+  router.push({ name: 'home' });
 }
 
 export async function onAppStartLogin({ commit }) {
@@ -30,6 +29,18 @@ export async function onAppStartLogin({ commit }) {
   } catch (error) {
     commit(UPDATE_TOKEN, null);
     router.push({ name: 'signin' });
+  }
+}
+
+export async function signOut({ commit }) {
+  try {
+    await firebase.auth().signOut();
+    await apolloClient.resetStore();
+    
+    commit(SIGN_OUT);
+    router.push({ name: 'home' });
+  } catch (error) {
+    console.error(error);
   }
 }
 

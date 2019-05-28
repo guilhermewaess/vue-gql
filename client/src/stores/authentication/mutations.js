@@ -1,4 +1,4 @@
-import { LOGIN, UPDATE_TOKEN } from './mutationTypes';
+import { LOGIN, UPDATE_TOKEN, SIGN_OUT } from './mutationTypes';
 
 export default {
   [LOGIN](state, payload) {
@@ -7,5 +7,10 @@ export default {
   },
   [UPDATE_TOKEN](state, payload) {
     state.token = payload;
+  },
+  [SIGN_OUT](state) {
+    state.token = null;
+    state.user = null;
+    state.isLogged = false;
   },
 };

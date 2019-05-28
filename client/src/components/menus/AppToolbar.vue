@@ -37,6 +37,30 @@
                   class="hidden-sm-only">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
+
+        <v-btn flat
+               :to="{ name: 'profile'}"
+               v-if="isLogged">
+          <v-icon left
+                  class="hidden-sm-only">fa-user</v-icon>
+          <v-badge color="blue darken-2">
+            <template v-slot:badge>
+              <span>2</span>
+            </template>
+            Profile
+          </v-badge>
+        </v-btn>
+
+        <v-btn flat
+               v-if="isLogged"
+               @click="signOut">
+          <v-icon class="hidden-sm-only"
+                  left>
+                  fa-sign-out-alt
+          </v-icon>
+          Signout
+        </v-btn>
+
       </v-toolbar-items>
     </v-toolbar>
   </div>
@@ -53,16 +77,28 @@ export default {
   data() {
     return {
       showNavDrawer: false,
-      navItems: [
-        { icon: 'fa-comment', title: 'Posts', link: '/posts' },
-        { icon: 'fa-sign-in-alt', title: 'Sign In', link: '/signin' },
-        { icon: 'fa-user-plus', title: 'Sign Up', link: '/signup' },
-      ],
     };
   },
   methods: {
     toggleNavDrawer() {
       this.showNavDrawer = !this.showNavDrawer;
+    },
+    signOut() {
+      this.$store.dispatch('auth/signOut');
+    },
+  },
+  computed: {
+    isLogged() {
+      return this.$store.getters['auth/isLogged'];
+    },
+    navItems() {
+      if (this.isLogged) {
+        return [{ icon: 'fa-comments', title: 'Posts', link: '/posts' }];
+      }
+      return [
+        { icon: 'fa-comments', title: 'Posts', link: '/posts' },
+        { icon: 'fa-sign-in-alt', title: 'Sign In', link: '/signin' },
+      ];
     },
   },
 };

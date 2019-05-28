@@ -14,13 +14,22 @@
     <v-divider></v-divider>
 
     <v-list>
-      <v-list-tile v-for="item in navItems" :key="item.title" :to="item.link">
+      <v-list-tile v-for="item in navItems"
+                   :key="item.title"
+                   :to="item.link">
         <v-list-tile-action>
           <v-icon>{{item.icon}}</v-icon>
         </v-list-tile-action>
         <v-list-tile-content>
           {{ item.title }}
         </v-list-tile-content>
+      </v-list-tile>
+
+      <v-list-tile v-if="isLogged" @click="signOut">
+        <v-list-tile-action>
+          <v-icon>fa-sign-out-alt</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>Signout</v-list-tile-content>
       </v-list-tile>
     </v-list>
   </div>
@@ -33,15 +42,25 @@ export default {
     toggleNavDrawer() {
       this.$emit('toggleNavDrawer');
     },
+    signOut() {
+      this.$store.dispatch('auth/signOut');
+    },
   },
-  data() {
-    return {
-      navItems: [
-        { icon: 'fa-comment', title: 'Posts', link: '/posts' },
+  computed: {
+    isLogged() { return this.$store.getters['auth/isLogged']; },
+    navItems() {
+      if (this.isLogged) {
+        return [
+          { icon: 'fa-comments', title: 'Posts', link: '/posts' },
+          { icon: 'fa-file-alt', title: 'Create Post', link: '/posts/add' },
+          { icon: 'fa-user', title: 'Profile', link: '/profile' },
+        ];
+      }
+      return [
+        { icon: 'fa-comments', title: 'Posts', link: '/posts' },
         { icon: 'fa-sign-in-alt', title: 'Sign In', link: '/signin' },
-        { icon: 'fa-user-plus', title: 'Sign Up', link: '/signup' },
-      ],
-    };
+      ];
+    },
   },
 };
 </script>
