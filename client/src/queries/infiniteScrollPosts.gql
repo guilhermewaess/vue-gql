@@ -1,0 +1,20 @@
+query($pagination: PaginationInput!) {
+  infiniteScrollPosts(pagination: $pagination) {
+    posts{
+      _id
+      title
+      imgUrl
+      categories
+      description
+      createdDate
+      likes
+      messages {
+        _id
+      }
+      createdBy{
+        userName
+      }
+    }
+    hasMore
+  }
+}

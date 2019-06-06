@@ -18,7 +18,6 @@ export const ADD_POST = gql`
       imgUrl
       categories
       description
-      createdDate
       likes
     }
   }

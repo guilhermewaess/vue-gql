@@ -18,5 +18,5 @@ export default new Vuex.Store({
     ui,
   },
   plugins: [persitedState],
-  strict: true,
+  strict: false, // TODO: remove posts from vuex
 });

@@ -2,6 +2,7 @@ import { SET_POSTS } from './mutationTypes';
 import { SET_LOADING } from '../ui/mutationTypes';
 import { GET_POSTS, ADD_POST } from './queries';
 import apolloClient from '../../apolloClient';
+import router from '../../router';
 
 export async function getPosts({ commit }) {
   try {
@@ -21,14 +22,32 @@ export async function getPosts({ commit }) {
 
 export async function addPost(_, post) {
   try {
-    const { data } = await apolloClient.mutate({
+    await apolloClient.mutate({
       mutation: ADD_POST,
       variables: {
         post,
       },
+      update: (cache, { data: { addPost: addedPost } }) => {
+        // read the query
+        const cacheData = cache.readQuery({ query: GET_POSTS });
+        // update data
+        cacheData.getPosts.unshift(addedPost);
+        // write back to the query
+        cache.writeQuery({
+          query: GET_POSTS,
+          data: cacheData,
+        });
+      },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        addPost: {
+          __typename: 'Post',
+          _id: -1,
+          ...post,
+        },
+      },
     });
-
-    console.log(data.addPost);
+    router.push({ name: 'home' });
   } catch (error) {
     console.error(error);
   }
