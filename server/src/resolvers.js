@@ -14,6 +14,39 @@ export const resolvers = {
     },
     getUser: (_, __, { currentUser }) => {
       return currentUser
+    },
+    infiniteScrollPosts: async (
+      _,
+      { pagination: { pageNum, pageSize } },
+      { Post }
+    ) => {
+      console.log('TCL: pageNum, pageSize', { pageNum, pageSize })
+      console.log('===============================================')
+      let posts
+      if (pageNum === 1) {
+        posts = Post.find({})
+          .sort({ createdDate: 'desc' })
+          .populate({
+            path: 'createdBy',
+            model: 'User'
+          })
+          .limit(pageSize)
+      } else {
+        const skips = pageSize * (pageNum - 1)
+        posts = Post.find({})
+          .sort({ createdDate: 'desc' })
+          .populate({
+            path: 'createdBy',
+            model: 'User'
+          })
+          .skip(skips)
+          .limit(pageSize)
+      }
+      const totalDocs = await Post.countDocuments()
+
+      const hasMore = totalDocs > pageSize * pageNum
+
+      return { posts, hasMore }
     }
   },
   Mutation: {

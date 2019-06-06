@@ -21,6 +21,11 @@ type Post {
   messages: [Message]
 }
 
+type PostsPage {
+  posts: [Post]
+  hasMore: Boolean
+}
+
 type Message {
   _id: ID
   messageBody: String!
@@ -28,9 +33,10 @@ type Message {
   messageUser: User!
 }
 
-type Query {
-  getPosts: [Post]
-  getUser: User!
+
+input PaginationInput {
+  pageNum: Int!
+  pageSize: Int!
 }
 
 input SignInWithSocialInput {
@@ -46,6 +52,12 @@ input AddPostInput {
   imgUrl: String!, 
   categories: [String]!, 
   description: String!, 
+}
+
+type Query {
+  getPosts: [Post]
+  getUser: User!
+  infiniteScrollPosts(pagination: PaginationInput!): PostsPage!
 }
 
 type Mutation {
