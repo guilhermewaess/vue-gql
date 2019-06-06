@@ -12,6 +12,13 @@ export const resolvers = {
 
       return posts
     },
+    getPost: async (_, { postId }, { Post }) => {
+      const post = await Post.findOne({ _id: postId }).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      })
+      return post
+    },
     getUser: (_, __, { currentUser }) => {
       return currentUser
     },
@@ -20,8 +27,6 @@ export const resolvers = {
       { pagination: { pageNum, pageSize } },
       { Post }
     ) => {
-      console.log('TCL: pageNum, pageSize', { pageNum, pageSize })
-      console.log('===============================================')
       let posts
       if (pageNum === 1) {
         posts = Post.find({})
