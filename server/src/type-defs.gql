@@ -54,6 +54,11 @@ input AddPostInput {
   description: String!, 
 }
 
+input AddPostMessageInput {
+  messageBody: String!,
+  postId: ID!
+}
+
 type Query {
   getPosts: [Post]
   getPost(postId: ID!): Post!
@@ -62,6 +67,7 @@ type Query {
 }
 
 type Mutation {
+  addPostMessage(postMessage: AddPostMessageInput!): Message!
   addPost(post: AddPostInput!): Post!
   signUpUser(userName: String!, email: String!, password: String!): User!
   signInWithSocial(token: String!): User!

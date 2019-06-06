@@ -1,4 +1,5 @@
 import { UserService } from './services/user-service'
+import { async } from 'rxjs/internal/scheduler/async'
 
 export const resolvers = {
   Query: {
@@ -66,6 +67,25 @@ export const resolvers = {
       }).save()
 
       return newPost
+    },
+    addPostMessage: async (_, { postMessage }, { Post, currentUser }) => {
+      const newMessage = {
+        messageBody: postMessage.messageBody,
+        messageUser: currentUser._id
+      }
+
+      const post = await Post.findOneAndUpdate(
+        { _id: postMessage.postId },
+        // prepend new message
+        { $push: { messages: { $each: [newMessage], $position: 0 } } },
+        // return updated document
+        { new: true }
+      ).populate({
+        path: 'messages.messageUser',
+        model: 'User'
+      })
+
+      return post.messages[0]
     },
     signInWithSocial: async (_, { token }) => {
       try {
