@@ -1,0 +1,11 @@
+mutation($postMessage: AddPostMessageInput!){
+  addPostMessage(postMessage: $postMessage){
+    _id,
+    messageBody
+    messageDate
+    messageUser {
+      userName
+      avatar
+    }
+  }
+}
