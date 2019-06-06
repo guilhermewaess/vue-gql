@@ -10,7 +10,8 @@
               v-for="post in infiniteScrollPosts.posts"
               :key="post._id">
         <v-card hover>
-          <v-img :src="post.imgUrl"
+          <v-img @click.native="goToPost(post._id)"
+                 :src="post.imgUrl"
                  height="30vh"
                  lazy>
           </v-img>
@@ -32,7 +33,8 @@
           </v-card-actions>
 
           <v-slide-y-transition>
-            <v-card-text class="grey lighten-4" v-show="showPostCreator">
+            <v-card-text class="grey lighten-4"
+                         v-show="showPostCreator">
               <v-list-tile avatar>
                 <v-list-tile-avatar>
                   <img :src="post.createdBy.avatar"
@@ -63,10 +65,13 @@
       </v-flex>
     </v-layout>
 
-    <v-layout column v-if="showMoreEnabled">
+    <v-layout column
+              v-if="showMoreEnabled">
       <v-flex xs12>
-        <v-layout justify-center row>
-          <v-btn color="info" @click="showMorePosts">Show More Posts</v-btn>
+        <v-layout justify-center
+                  row>
+          <v-btn color="info"
+                 @click="showMorePosts">Show More Posts</v-btn>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -130,6 +135,9 @@ export default {
           };
         },
       });
+    },
+    goToPost(postId) {
+      this.$router.push({ name: 'post', params: { postId } });
     },
   },
 };

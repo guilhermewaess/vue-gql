@@ -4,7 +4,8 @@
               interval="3000">
     <v-carousel-item v-for="post in posts"
                      :key="post._id"
-                     :src="post.imgUrl">
+                     :src="post.imgUrl"
+                     @click.native="goToPost(post._id)">
       <h1 class="carousel__title">{{post.title}}</h1>
     </v-carousel-item>
   </v-carousel>
@@ -17,6 +18,9 @@ export default {
     this.$store.dispatch('posts/getPosts');
   },
   methods: {
+    goToPost(postId) {
+      this.$router.push({ name: 'post', params: { postId } });
+    },
   },
   computed: {
     posts() { return this.$store.getters['posts/posts']; },

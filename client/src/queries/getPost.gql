@@ -1,0 +1,20 @@
+query($postId: ID!) {
+  getPost(postId: $postId) {
+    _id
+    title
+    imgUrl
+    categories
+    description
+    likes
+    createdDate
+    messages {
+      _id
+      messageBody
+      messageDate
+      messageUser {
+        userName
+        avatar
+      }
+    }
+  }
+}
