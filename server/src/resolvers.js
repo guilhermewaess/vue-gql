@@ -1,9 +1,9 @@
 import { UserService } from './services/user-service'
-import { async } from 'rxjs/internal/scheduler/async'
+import { Post } from './models'
 
 export const resolvers = {
   Query: {
-    getPosts: async (_, __, { Post }) => {
+    getPosts: async (_, __) => {
       const posts = await Post.find({})
         .sort({ createdDate: 'desc' })
         .populate({
@@ -13,7 +13,7 @@ export const resolvers = {
 
       return posts
     },
-    getPost: async (_, { postId }, { Post }) => {
+    getPost: async (_, { postId }) => {
       const post = await Post.findOne({ _id: postId }).populate({
         path: 'messages.messageUser',
         model: 'User'
@@ -23,11 +23,7 @@ export const resolvers = {
     getUser: (_, __, { currentUser }) => {
       return currentUser
     },
-    infiniteScrollPosts: async (
-      _,
-      { pagination: { pageNum, pageSize } },
-      { Post }
-    ) => {
+    infiniteScrollPosts: async (_, { pagination: { pageNum, pageSize } }) => {
       let posts
       if (pageNum === 1) {
         posts = Post.find({})
@@ -56,8 +52,7 @@ export const resolvers = {
     }
   },
   Mutation: {
-    addPost: async (_, { post }, { Post, currentUser }) => {
-      console.log('Post', { post })
+    addPost: async (_, { post }, { currentUser }) => {
       const newPost = await new Post({
         title: post.title,
         imgUrl: post.imgUrl,
@@ -68,7 +63,7 @@ export const resolvers = {
 
       return newPost
     },
-    addPostMessage: async (_, { postMessage }, { Post, currentUser }) => {
+    addPostMessage: async (_, { postMessage }, { currentUser }) => {
       const newMessage = {
         messageBody: postMessage.messageBody,
         messageUser: currentUser._id

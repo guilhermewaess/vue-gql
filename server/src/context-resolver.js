@@ -1,5 +1,4 @@
 import { UserService } from './services/user-service'
-import { Post, User } from './models'
 
 export async function contextResolver({ req }) {
   const token = req.headers['authorization']
@@ -10,8 +9,6 @@ export async function contextResolver({ req }) {
   }
 
   return {
-    User,
-    Post,
     currentUser
   }
 }
