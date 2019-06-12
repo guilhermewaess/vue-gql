@@ -22,6 +22,11 @@ export const GET_USER = gql`
       emailVerified
       avatar
       joinDate
+      favorites {
+        _id
+        title
+        imgUrl
+      }
     }
   }
 `;

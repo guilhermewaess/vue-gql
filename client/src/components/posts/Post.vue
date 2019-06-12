@@ -11,8 +11,9 @@
             <h1>{{ getPost.title }}</h1>
             <v-btn large
                    icon
+                   @click="handleLikePost"
                    v-if="user">
-              <v-icon color="grey">fa-heart</v-icon>
+              <v-icon :color="isFavorite ? 'red' : 'grey'">fa-heart</v-icon>
             </v-btn>
             <h3 class="ml-3 font-weight-thin">{{ getPost.likes }} LIKES</h3>
             <v-spacer></v-spacer>
@@ -119,6 +120,8 @@
 <script>
 import GET_POST from '../../queries/getPost.gql';
 import ADD_POST_MESSAGE from '../../queries/addPostMessage.gql';
+import LIKE_POST from '../../queries/likePost.gql';
+import UNLIKE_POST from '../../queries/unlikePost.gql';
 
 export default {
   name: 'Post',
@@ -139,6 +142,10 @@ export default {
   computed: {
     user() {
       return this.$store.getters['auth/user'];
+    },
+    isFavorite() {
+      const userFavorites = this.user.favorites;
+      return userFavorites.some(f => f._id === this.postId);
     },
   },
   apollo: {
@@ -179,6 +186,61 @@ export default {
           });
         },
       });
+    },
+    async handleLikePost() {
+      if (this.isFavorite) {
+        this.unlikePost();
+      } else {
+        this.likePost();
+      }
+    },
+    async likePost() {
+      const variables = {
+        postId: this.postId,
+      };
+      const result = await this.$apollo.mutate({
+        mutation: LIKE_POST,
+        variables,
+        update: (cache, { data: { likePost } }) => {
+          const data = cache.readQuery({
+            query: GET_POST,
+            variables,
+          });
+          data.getPost.likes = likePost.likes;
+          cache.writeQuery({
+            query: GET_POST,
+            variables,
+            data,
+          });
+        },
+      });
+
+      console.log(result);
+      this.$store.dispatch('auth/refreshUserData');
+    },
+    async unlikePost() {
+      const variables = {
+        postId: this.postId,
+      };
+      const result = await this.$apollo.mutate({
+        mutation: UNLIKE_POST,
+        variables,
+        update: (cache, { data: { unlikePost } }) => {
+          const data = cache.readQuery({
+            query: GET_POST,
+            variables,
+          });
+          data.getPost.likes = unlikePost.likes;
+          cache.writeQuery({
+            query: GET_POST,
+            variables,
+            data,
+          });
+        },
+      });
+
+      console.log(result);
+      this.$store.dispatch('auth/refreshUserData');
     },
     goToPreviousPage() {
       this.$router.go(-1);

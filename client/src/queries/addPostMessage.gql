@@ -1,6 +1,6 @@
 mutation($postMessage: AddPostMessageInput!){
   addPostMessage(postMessage: $postMessage){
-    _id,
+    _id
     messageBody
     messageDate
     messageUser {
