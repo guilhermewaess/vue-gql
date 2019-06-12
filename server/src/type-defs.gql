@@ -33,6 +33,10 @@ type Message {
   messageUser: User!
 }
 
+type LikesAndFavorites {
+  likes: Int!
+  favorites: [Post]
+}
 
 input PaginationInput {
   pageNum: Int!
@@ -69,6 +73,8 @@ type Query {
 type Mutation {
   addPostMessage(postMessage: AddPostMessageInput!): Message!
   addPost(post: AddPostInput!): Post!
+  likePost(postId: ID!): LikesAndFavorites!
+  unlikePost(postId: ID!): LikesAndFavorites!
   signUpUser(userName: String!, email: String!, password: String!): User!
   signInWithSocial(token: String!): User!
 }

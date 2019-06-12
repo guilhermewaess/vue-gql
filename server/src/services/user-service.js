@@ -3,7 +3,10 @@ import { User } from '../models'
 
 export class UserService {
   static async getUser(userProperties) {
-    return User.findOne(userProperties)
+    return User.findOne(userProperties).populate({
+      path: 'favorites',
+      model: 'Post'
+    })
   }
 
   static async createNewUserFromFirebase(userObject) {
@@ -48,5 +51,15 @@ export class UserService {
 
     const newUser = await UserService.createNewUser(userModel)
     return newUser
+  }
+
+  static async changeFavorite(postId, currentUser, isNewFavorite) {
+    const operation = isNewFavorite
+      ? { $addToSet: { favorites: postId } }
+      : { $pull: { favorites: postId } }
+
+    return User.findOneAndUpdate({ userId: currentUser.userId }, operation, {
+      new: true
+    }).populate({ path: 'favorites', model: 'Post' })
   }
 }

@@ -1,24 +1,14 @@
 import { UserService } from './services/user-service'
 import { Post } from './models'
+import { PostService } from './services/post.service'
 
 export const resolvers = {
   Query: {
-    getPosts: async (_, __) => {
-      const posts = await Post.find({})
-        .sort({ createdDate: 'desc' })
-        .populate({
-          path: 'createdBy',
-          model: 'User'
-        })
-
-      return posts
+    getPosts: (_, __) => {
+      return PostService.getAllPosts()
     },
-    getPost: async (_, { postId }) => {
-      const post = await Post.findOne({ _id: postId }).populate({
-        path: 'messages.messageUser',
-        model: 'User'
-      })
-      return post
+    getPost: (_, { postId }) => {
+      return PostService.getPost({ _id: postId })
     },
     getUser: (_, __, { currentUser }) => {
       return currentUser
@@ -26,21 +16,10 @@ export const resolvers = {
     infiniteScrollPosts: async (_, { pagination: { pageNum, pageSize } }) => {
       let posts
       if (pageNum === 1) {
-        posts = Post.find({})
-          .sort({ createdDate: 'desc' })
-          .populate({
-            path: 'createdBy',
-            model: 'User'
-          })
-          .limit(pageSize)
+        posts = await PostService.getAllPosts().limit(pageSize)
       } else {
         const skips = pageSize * (pageNum - 1)
-        posts = Post.find({})
-          .sort({ createdDate: 'desc' })
-          .populate({
-            path: 'createdBy',
-            model: 'User'
-          })
+        posts = await PostService.getAllPosts()
           .skip(skips)
           .limit(pageSize)
       }
@@ -52,35 +31,34 @@ export const resolvers = {
     }
   },
   Mutation: {
-    addPost: async (_, { post }, { currentUser }) => {
-      const newPost = await new Post({
+    addPost: (_, { post }, { currentUser }) => {
+      return PostService.createPost({
         title: post.title,
         imgUrl: post.imgUrl,
         categories: post.categories,
         description: post.description,
         createdBy: currentUser._id
-      }).save()
-
-      return newPost
+      })
     },
-    addPostMessage: async (_, { postMessage }, { currentUser }) => {
+    addPostMessage: (_, { postMessage }, { currentUser }) => {
       const newMessage = {
         messageBody: postMessage.messageBody,
         messageUser: currentUser._id
       }
 
-      const post = await Post.findOneAndUpdate(
-        { _id: postMessage.postId },
-        // prepend new message
-        { $push: { messages: { $each: [newMessage], $position: 0 } } },
-        // return updated document
-        { new: true }
-      ).populate({
-        path: 'messages.messageUser',
-        model: 'User'
-      })
+      return PostService.addMessageOnPost(postMessage.postId, newMessage)
+    },
+    likePost: async (_, { postId }, { currentUser }) => {
+      const post = await PostService.changeLikesCount(postId, 1)
+      const user = await UserService.changeFavorite(postId, currentUser, true)
 
-      return post.messages[0]
+      return { likes: post.likes, favorites: user.favorites }
+    },
+    unlikePost: async (_, { postId }, { currentUser }) => {
+      const post = await PostService.changeLikesCount(postId, -1)
+      const user = await UserService.changeFavorite(postId, currentUser, false)
+
+      return { likes: post.likes, favorites: user.favorites }
     },
     signInWithSocial: async (_, { token }) => {
       try {
