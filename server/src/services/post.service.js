@@ -41,4 +41,16 @@ export class PostService {
       { new: true }
     )
   }
+
+  static searchPosts(searchTerm) {
+    return Post.find(
+      { $text: { $search: searchTerm } },
+      { score: { $meta: 'textScore' } }
+    )
+      .sort({
+        score: { $meta: 'textScore' },
+        likes: 'desc'
+      })
+      .limit(5)
+  }
 }

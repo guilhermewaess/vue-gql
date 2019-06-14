@@ -66,6 +66,7 @@ input AddPostMessageInput {
 type Query {
   getPosts: [Post]
   getPost(postId: ID!): Post!
+  searchPosts(searchTerm: String!): [Post]
   getUser: User!
   infiniteScrollPosts(pagination: PaginationInput!): PostsPage!
 }

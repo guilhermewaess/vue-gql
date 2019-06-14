@@ -28,6 +28,9 @@ export const resolvers = {
       const hasMore = totalDocs > pageSize * pageNum
 
       return { posts, hasMore }
+    },
+    searchPosts: async (_, { searchTerm }) => {
+      return PostService.searchPosts(searchTerm)
     }
   },
   Mutation: {

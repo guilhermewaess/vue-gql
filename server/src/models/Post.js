@@ -49,4 +49,9 @@ const PostSchema = new Schema({
   ]
 })
 
+// create inde to search
+PostSchema.index({
+  '$**': 'text'
+})
+
 export const Post = model('Post', PostSchema)
