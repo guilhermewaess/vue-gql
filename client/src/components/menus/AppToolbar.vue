@@ -24,7 +24,10 @@
                     placeholder="Search posts"
                     color="accent"
                     single-line
-                    hide-details></v-text-field>
+                    hide-details
+                    v-model="searchTerm"
+                    @input="handleSearchPosts">
+                    </v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -80,9 +83,12 @@ export default {
     return {
       showNavDrawer: false,
       animateFavoriteBadge: false,
+      searchTerm: '',
     };
   },
   methods: {
+    handleSearchPosts() {
+    },
     toggleNavDrawer() {
       this.showNavDrawer = !this.showNavDrawer;
     },
