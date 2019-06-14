@@ -45,7 +45,9 @@
                   class="hidden-sm-only">fa-user</v-icon>
           <v-badge color="blue darken-2">
             <template v-slot:badge>
-              <span>2</span>
+              <span :class="{ 'shake': animateFavoriteBadge }">
+                {{ userFavorites.length }}
+              </span>
             </template>
             Profile
           </v-badge>
@@ -77,6 +79,7 @@ export default {
   data() {
     return {
       showNavDrawer: false,
+      animateFavoriteBadge: false,
     };
   },
   methods: {
@@ -91,6 +94,9 @@ export default {
     isLogged() {
       return this.$store.getters['auth/isLogged'];
     },
+    userFavorites() {
+      return this.$store.getters['auth/userFavorites'];
+    },
     navItems() {
       if (this.isLogged) {
         return [
@@ -103,5 +109,44 @@ export default {
       ];
     },
   },
+  watch: {
+    userFavorites(value) {
+      if (value) {
+        this.animateFavoriteBadge = true;
+        setTimeout(() => {
+          this.animateFavoriteBadge = false;
+        }, 1000);
+      }
+    },
+  },
 };
 </script>
+
+<style lang="scss" scoped>
+.shake {
+  animation: shake 1s;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+</style>

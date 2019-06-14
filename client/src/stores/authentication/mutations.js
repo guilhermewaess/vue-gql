@@ -4,8 +4,8 @@ import {
 
 export default {
   [LOGIN](state, payload) {
-    state.isLogged = true;
     state.user = payload;
+    state.isLogged = true;
   },
   [UPDATE_TOKEN](state, payload) {
     state.token = payload;

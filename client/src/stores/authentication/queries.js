@@ -9,6 +9,11 @@ export const SIGIN_WITH_SOCIAL = gql`
       emailVerified
       avatar
       joinDate
+      favorites {
+        _id
+        title
+        imgUrl
+      }
     }
   }
 `;
