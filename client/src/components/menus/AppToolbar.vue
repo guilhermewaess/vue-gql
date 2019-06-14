@@ -27,7 +27,7 @@
                     hide-details
                     v-model="searchTerm"
                     @input="handleSearchPosts">
-                    </v-text-field>
+      </v-text-field>
 
       <v-spacer></v-spacer>
 
@@ -72,7 +72,9 @@
 </template>
 
 <script>
+import debounce from 'lodash-es/debounce';
 import AppNavDrawerContent from './AppNavDrawerContent.vue';
+import SEARCH_POSTS from '../../queries/searchPosts.gql';
 
 export default {
   name: 'AppToolbar',
@@ -84,10 +86,20 @@ export default {
       showNavDrawer: false,
       animateFavoriteBadge: false,
       searchTerm: '',
+      searchResults: [],
     };
   },
   methods: {
-    handleSearchPosts() {
+    // eslint-disable-next-line func-names
+    handleSearchPosts: debounce(function () { this.searchPosts(); }, 800),
+    searchPosts() {
+      const variables = {
+        searchTerm: this.searchTerm,
+      };
+      this.searchResults = this.$apollo.query({
+        query: SEARCH_POSTS,
+        variables,
+      });
     },
     toggleNavDrawer() {
       this.showNavDrawer = !this.showNavDrawer;

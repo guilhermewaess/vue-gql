@@ -19,9 +19,7 @@ export default new ApolloClient({
     }
 
     if (graphQLErrors) {
-      for (const err of graphQLErrors) {
-        console.dir('GraphQLError', err);
-      }
+      console.dir('GraphQLError', graphQLErrors);
     }
   },
 });
