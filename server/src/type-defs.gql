@@ -1,4 +1,5 @@
 type User {
+  _id: ID
   userId: String
   userName: String!
   email: String!
@@ -52,14 +53,22 @@ input SignInWithSocialInput {
 }
 
 input AddPostInput {
-  title: String!, 
-  imgUrl: String!, 
-  categories: [String]!, 
-  description: String!, 
+  title: String!
+  imgUrl: String!
+  categories: [String]!
+  description: String! 
+}
+
+input UpdatePostInput {
+  _id: ID!
+  title: String!
+  imgUrl: String!
+  categories: [String]!
+  description: String! 
 }
 
 input AddPostMessageInput {
-  messageBody: String!,
+  messageBody: String!
   postId: ID!
 }
 
@@ -68,12 +77,15 @@ type Query {
   getPost(postId: ID!): Post!
   searchPosts(searchTerm: String!): [Post]
   getUser: User!
+  getUserPosts: [Post] 
   infiniteScrollPosts(pagination: PaginationInput!): PostsPage!
 }
 
 type Mutation {
   addPostMessage(postMessage: AddPostMessageInput!): Message!
   addPost(post: AddPostInput!): Post!
+  updatePost(post: UpdatePostInput!): Post!
+  deletePost(postId: ID!): Post!
   likePost(postId: ID!): LikesAndFavorites!
   unlikePost(postId: ID!): LikesAndFavorites!
   signUpUser(userName: String!, email: String!, password: String!): User!

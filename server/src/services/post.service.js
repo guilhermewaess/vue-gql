@@ -42,6 +42,12 @@ export class PostService {
     )
   }
 
+  static getAllFromUserId(userId) {
+    return Post.find({
+      createdBy: userId
+    })
+  }
+
   static searchPosts(searchTerm) {
     return Post.find(
       { $text: { $search: searchTerm } },
@@ -52,5 +58,27 @@ export class PostService {
         likes: 'desc'
       })
       .limit(5)
+  }
+
+  static updatePost(post, user) {
+    return Post.findOneAndUpdate(
+      { _id: post._id, createdBy: user._id },
+      {
+        $set: {
+          title: post.title,
+          imgUrl: post.imgUrl,
+          categories: post.categories,
+          description: post.description
+        }
+      },
+      { new: true }
+    ).populate({
+      path: 'createdBy',
+      model: 'User'
+    })
+  }
+
+  static deletePost(postId) {
+    return Post.findByIdAndRemove({ _id: postId })
   }
 }

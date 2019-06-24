@@ -13,6 +13,9 @@ export const resolvers = {
     getUser: (_, __, { currentUser }) => {
       return currentUser
     },
+    getUserPosts: (_, __, { currentUser }) => {
+      return PostService.getAllFromUserId(currentUser._id)
+    },
     infiniteScrollPosts: async (_, { pagination: { pageNum, pageSize } }) => {
       let posts
       if (pageNum === 1) {
@@ -51,6 +54,10 @@ export const resolvers = {
 
       return PostService.addMessageOnPost(postMessage.postId, newMessage)
     },
+    updatePost: async (_, { post }, { currentUser }) => {
+      const result = await PostService.updatePost(post, currentUser)
+      return result
+    },
     likePost: async (_, { postId }, { currentUser }) => {
       const post = await PostService.changeLikesCount(postId, 1)
       const user = await UserService.changeFavorite(postId, currentUser, true)
@@ -62,6 +69,9 @@ export const resolvers = {
       const user = await UserService.changeFavorite(postId, currentUser, false)
 
       return { likes: post.likes, favorites: user.favorites }
+    },
+    deletePost: async (_, { postId }) => {
+      return PostService.deletePost(postId)
     },
     signInWithSocial: async (_, { token }) => {
       try {
