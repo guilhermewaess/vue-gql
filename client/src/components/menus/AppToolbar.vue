@@ -29,6 +29,27 @@
                     @input="handleSearchPosts">
       </v-text-field>
 
+      <v-card dark
+              v-click-outside="cleanSearch"
+              v-if="searchResults.length"
+              class="search-results-card">
+        <v-list>
+          <v-list-tile @click="goToPost(result._id)"
+                       v-for="result in searchResults"
+                       :key="result._id">
+            <v-list-tile-title>
+              {{ result.title }} -
+              <span class="font-weight-thin">
+                {{ formatDescription(result.description) }}
+              </span>
+            </v-list-tile-title>
+            <v-list-tile-action v-if="checkIfIsUserFavorite(result._id)">
+              <v-icon color="red">fa-heart</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+
       <v-spacer></v-spacer>
 
       <v-toolbar-items class="hidden-xs-only">
@@ -72,7 +93,9 @@
 </template>
 
 <script>
+import ClickOutside from 'vue-click-outside';
 import debounce from 'lodash-es/debounce';
+
 import AppNavDrawerContent from './AppNavDrawerContent.vue';
 import SEARCH_POSTS from '../../queries/searchPosts.gql';
 
@@ -80,6 +103,9 @@ export default {
   name: 'AppToolbar',
   components: {
     AppNavDrawerContent,
+  },
+  directives: {
+    ClickOutside,
   },
   data() {
     return {
@@ -91,21 +117,45 @@ export default {
   },
   methods: {
     // eslint-disable-next-line func-names
-    handleSearchPosts: debounce(function () { this.searchPosts(); }, 800),
-    searchPosts() {
+    handleSearchPosts: debounce(function () {
+      if (this.searchTerm) {
+        this.searchPosts();
+      }
+    }, 800),
+    async searchPosts() {
       const variables = {
         searchTerm: this.searchTerm,
       };
-      this.searchResults = this.$apollo.query({
+      const {
+        data: { searchPosts },
+      } = await this.$apollo.query({
         query: SEARCH_POSTS,
         variables,
       });
+      this.searchResults = searchPosts;
     },
     toggleNavDrawer() {
       this.showNavDrawer = !this.showNavDrawer;
     },
     signOut() {
       this.$store.dispatch('auth/signOut');
+    },
+    cleanSearch() {
+      this.searchTerm = '';
+      this.searchResults = [];
+    },
+    goToPost(postId) {
+      this.cleanSearch();
+      this.$router.push({ name: 'post', params: { postId } });
+    },
+    formatDescription(description) {
+      const limit = 30;
+      return description.length > limit
+        ? `${description.slice(0, limit)}...`
+        : description;
+    },
+    checkIfIsUserFavorite(id) {
+      return this.userFavorites.some(post => post._id === id);
     },
   },
   computed: {
@@ -141,6 +191,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.search-results-card {
+  position: absolute;
+  width: 100vw;
+  z-index: 1000;
+  top: 100%;
+  left: 0%;
+}
+
 .shake {
   animation: shake 1s;
 }
