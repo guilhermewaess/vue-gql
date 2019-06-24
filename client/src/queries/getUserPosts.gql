@@ -1,0 +1,11 @@
+query {
+  getUserPosts {
+    _id
+    title
+    imgUrl
+    description
+    categories
+    createdDate
+    likes
+  }
+}

@@ -198,7 +198,7 @@ export default {
       const variables = {
         postId: this.postId,
       };
-      const result = await this.$apollo.mutate({
+      await this.$apollo.mutate({
         mutation: LIKE_POST,
         variables,
         update: (cache, { data: { likePost } }) => {
@@ -215,7 +215,6 @@ export default {
         },
       });
 
-      console.log(result);
       this.$store.dispatch('auth/refreshUserData');
     },
     async unlikePost() {

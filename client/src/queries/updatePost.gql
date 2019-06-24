@@ -1,0 +1,14 @@
+mutation($post: UpdatePostInput!) {	
+    updatePost(post: $post) {	
+      _id	
+      title	
+      imgUrl	
+      categories	
+      description	
+      likes
+      createdBy {
+        _id
+        avatar
+      }
+    }	
+  }
