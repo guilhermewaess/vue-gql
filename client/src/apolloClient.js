@@ -2,7 +2,7 @@ import ApolloClient from 'apollo-boost';
 import store from './store';
 
 export default new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri: process.env.VUE_APP_API,
   fetchOptions: {
     credentials: 'include',
   },

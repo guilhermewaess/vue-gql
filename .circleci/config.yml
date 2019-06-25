@@ -1,0 +1,31 @@
+version: 2
+dependencies:
+  cache_directories:
+    - ~/.yarn-cache
+  override:
+    - yarn
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:11.0.0'
+    working_directory: ~/project/client
+    steps:
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install dependencies
+          command: yarn
+      - run: sudo yarn global add now --no-save
+      - run:
+          name: build app
+          command: yarn run build 
+      - deploy:
+          name: deploy
+          branch: "master"
+          command: now --token $ZEIT_TOKEN
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules

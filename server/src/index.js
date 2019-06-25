@@ -6,12 +6,14 @@ import { join } from 'path'
 
 import { resolvers } from './resolvers'
 import { contextResolver as context } from './context-resolver'
-import './firebase'
+import { initFirebase } from './firebase'
 
 const typeDefsPath = join(__dirname, '../src', 'type-defs.gql')
 const typeDefs = readFileSync(typeDefsPath, 'utf-8')
 
 dotEnvConfig({ path: 'variables.env' })
+
+initFirebase()
 
 mongoConnect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => console.log(`DB Connected`))
@@ -23,7 +25,8 @@ const server = new ApolloServer({
   context
 })
 
+const port = process.env.PORT || 4000
 server
-  .listen()
+  .listen({ port })
   .then(({ url }) => console.log(`Listening on ${url}`))
   .catch(console.log.bind(console))

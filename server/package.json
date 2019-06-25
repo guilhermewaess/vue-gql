@@ -10,7 +10,8 @@
     "build": "rimraf dist && babel src --out-dir dist --ignore '**/*.spec.js'",
     "dev": "nodemon --exec yarn restart",
     "restart": "yarn build && node dist/index.js",
-    "test": "jest --forceExit --detectOpenHandles --runInBand"
+    "test": "jest --forceExit --detectOpenHandles --runInBand",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@graphql-modules/core": "^0.4.0",
