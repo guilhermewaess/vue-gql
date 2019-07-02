@@ -104,6 +104,7 @@ export default {
           pageSize,
         },
       },
+      fetchPolicy: 'network-only',
     },
   },
   methods: {

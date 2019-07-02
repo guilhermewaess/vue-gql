@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import ADD_POST from '../../queries/AddPost.gql';
+
 export default {
   name: 'AddPost',
   data() {
@@ -98,8 +100,17 @@ export default {
     };
   },
   methods: {
-    handleAddPost() {
-      this.$store.dispatch('posts/addPost', this.post);
+    async handleAddPost() {
+      const variables = {
+        post: this.post,
+      };
+      await this.$apollo.mutate({
+        mutation: ADD_POST,
+        variables,
+      });
+
+      console.log(this.$apollo);
+      this.$router.push({ name: 'home' });
     },
   },
 };

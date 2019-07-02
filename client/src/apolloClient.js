@@ -13,13 +13,15 @@ export default new ApolloClient({
       },
     });
   },
-  onError: ({ graphQLErrors, networkError }) => {
-    if (networkError) {
-      console.error('[NetworkError]', networkError);
+  onError: (error) => {
+    if (error.networkError) {
+      console.error('[NetworkError]', error.networkError);
     }
 
-    if (graphQLErrors) {
-      console.dir('GraphQLError', graphQLErrors);
+    if (error.graphQLErrors) {
+      console.dir('GraphQLError', error.graphQLErrors);
     }
+
+    console.log({ error });
   },
 });
