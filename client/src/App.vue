@@ -3,7 +3,7 @@
     <loading></loading>
     <app-toolbar></app-toolbar>
     <main>
-      <v-container class="mt-4">
+      <v-container class="mt-5">
         <transition name="fade">
           <router-view />
         </transition>
