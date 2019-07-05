@@ -9,3 +9,5 @@
 - MongoDb
 - CircleCi
 - AWS
+- Heroku
+- Zeit
